@@ -11,69 +11,46 @@ def equalize_histogram(src_img):
     return dst_img
 
 
-def fillHoles(mask):
-    maskFloodfill = mask.copy()
-    h, w = maskFloodfill.shape[:2]
-    maskTemp = np.zeros((h+2, w+2), np.uint8)
-    cv.floodFill(maskFloodfill, maskTemp, (0, 0), 255)
-    mask2 = cv.bitwise_not(maskFloodfill)
+def fill_holes(mask):
+    mask_flood_fill = mask.copy()
+    h, w = mask_flood_fill.shape[:2]
+    mask_temp = np.zeros((h+2, w+2), np.uint8)
+    cv.floodFill(mask_flood_fill, mask_temp, (0, 0), 255)
+    mask2 = cv.bitwise_not(mask_flood_fill)
     return mask2 | mask
 
 
-
 def red_eye_reduction(src_img):
-    # Read image
-    img = src_img
-
-    # Output image
-    imgOut = img.copy()
-
-    # Load HAAR cascade
-    eyesCascade = cv.CascadeClassifier(os.path.join(cascades.haarcascades, "haarcascade_eye.xml"))
-
-    # Detect eyes
-    eyes = eyesCascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(100, 100))
+    img_out = src_img.copy()
+    eyes_cascade = cv.CascadeClassifier(os.path.join(cascades.haarcascades, "haarcascade_eye.xml"))
+    eyes = eyes_cascade.detectMultiScale(src_img, scaleFactor=1.3, minNeighbors=4, minSize=(100, 100))
     for (x, y, w, h) in eyes:
-        # Extract eye from the image.
-        eye = img[y:y + h, x:x + w]
-        # Split eye image into 3 channels
+        eye = src_img[y:y + h, x:x + w]
         b = eye[:, :, 0]
         g = eye[:, :, 1]
         r = eye[:, :, 2]
 
-        # Add the green and blue channels.
         bg = cv.add(b, g)
-
-        # Simple red eye detector
         mask = (r > 150) & (r > bg)
-
-        # Convert the mask to uint8 format.
         mask = mask.astype(np.uint8) * 255
-
-        # Clean up mask by filling holes and dilating
-        mask = fillHoles(mask)
+        mask = fill_holes(mask)
         mask = cv.dilate(mask, None, anchor=(-1, -1), iterations=3, borderType=1, borderValue=1)
 
-        # Calculate the mean channel by averaging
-        # the green and blue channels. Recall, bg = cv2.add(b, g)
         mean = bg / 2
         mask = mask.astype(np.bool)[:, :, np.newaxis]
         mean = mean[:, :, np.newaxis]
 
-        # Copy the eye from the original image.
-        eyeOut = eye.copy()
-        # Copy the mean image to the output image.
-        np.copyto(eyeOut, mean, where=mask, casting='unsafe')
-        # Copy the fixed eye to the output image.
-        imgOut[y:y + h, x:x + w, :] = eyeOut
+        eye_out = eye.copy()
+        np.copyto(eye_out, mean, where=mask, casting='unsafe')
+        img_out[y:y + h, x:x + w, :] = eye_out
+    return img_out
 
-    return imgOut
 
 def main():
-    import os
     src_path = os.path.join("app", "static", "mock", "child.jpg")
     src_img = cv.imread(src_path)
     out_img = red_eye_reduction(src_img)
+    out_img = equalize_histogram(out_img)
     cv.imshow("SOURCE", src_img)
     cv.imshow("FILTERED", out_img)
     cv.waitKey(0)
