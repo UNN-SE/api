@@ -8,7 +8,7 @@ log = app.logger
 
 from .logic.order_repository import *
 
-if app.config['TEST_MODE']:
+if app.config['NO_DB']:
     order_repository = OrderRepositoryFolder()
 
 from app import routes, models
