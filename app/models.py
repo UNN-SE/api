@@ -12,10 +12,6 @@ class Client(User):
     email = "test@test.test"
     password = "qwerty123"
     phone = "87035568730"
-
-class PhotoSalon(Order):
-    id = 1
-    address = "Пушкина дом Колотушкина"
     
 class Order(Client):
     id = 1
@@ -24,12 +20,16 @@ class Order(Client):
     photo_salon_id = 1
     status = 1
 
-class Order_Service(Order):
+class PhotoSalon(Order):
+    id = 1
+    address = "Пушкина дом Колотушкина"
+
+class OrderService(Order):
     id = 1 
     order_id = 1
     service_id = 1
 
-class Service(Order-Service):
+class Service(OrderService):
     id = 1
     tittle = "test"
     decription = "Описание"
@@ -38,12 +38,12 @@ class Service(Order-Service):
 class Employee(PhotoSalon):
     photo_salon_id = 1
 
-class PhotoSalon_Equipment(PhotoSalon):
+class PhotoSalonEquipment(PhotoSalon):
     id = 1
     photo_salon_id = 1
     equipment_id = 1
 
-class Equipment(PhotoSalon_Equipment):
+class Equipment(PhotoSalonEquipment):
     id = 1
     tittle = "tittle"
     type = "type"
