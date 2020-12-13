@@ -1,43 +1,44 @@
-class User:
-    id = None
-    email = "test@test.com"
-    password = "qwerty123"
-    phone = "891012345676"
-class Client(User):
-    id = None
-    email = "test@test.test"
-    password = "qwerty123"
-    phone = "87035568730"
-class Order(Client):
-    id = None
-    client_id = None
-    source = "source"
-    photo_salon_id = None
-    status = None
-class PhotoSalon(Order):
-    id = None
-    address = "Пушкина дом Колотушкина"
+from sqlalchemy.sql.schema import ForeignKey
+from app import db
+from sqlalchemy.orm import relationship
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), unique=False, nullable=False)
+    phone = db.Column(db.String(11), unique=True, nullable=False)
+    orders = relationship("Order")
 
-class Order_Service(Order):
-    id = None 
-    order_id = None
-    service_id = None
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, ForeignKey('user.id'))
+    source = db.Column(db.String(120), unique=True, nullable=False)
+    photo_salon_id = db.Column(db.Integer)
+    status = db.Column(db.Integer)
 
-class Service(Order_Service):
-    id = None
-    tittle = "test"
-    decription = "Описание"
-    price = None
+# class PhotoSalon(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     address = db.Column(db.String(120), unique=True, nullable=False)
 
-class Employee(PhotoSalon):
-    photo_salon_id = None
+# class Order_Service(db.Model):
+#     id = db.Column(db.Integer, primary_key=True) 
+#     order_id = db.Column(db.Integer)
+#     service_id = db.Column(db.Integer, primary_key=True)
 
-class PhotoSalon_Equipment(PhotoSalon):
-    id = None
-    photo_salon_id = None
-    equipment_id = None
+# class Service(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     tittle = db.Column(db.String(120), unique=True, nullable=False)
+#     decription = db.Column(db.String(120), unique=True, nullable=False)
+#     price = db.Column(db.Integer)
 
-class Equipment(PhotoSalon_Equipment):
-    id = None
-    tittle = "tittle"
-    type = "type"
+# class Employee(db.Model):
+#     photo_salon_id = db.Column(db.Integer, primary_key=True)
+
+# class PhotoSalon_Equipment(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     photo_salon_id = db.Column(db.Integer)
+#     equipment_id = db.Column(db.Integer, primary_key=True)
+
+# class Equipment(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     tittle = db.Column(db.String(120), unique=True, nullable=False)
+#     type = db.Column(db.String(120), unique=True, nullable=False)
