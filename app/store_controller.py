@@ -3,6 +3,7 @@ from flask.views import MethodView
 
 from .models import PhotoSalon
 
+
 class StoresController(MethodView):
     def get(self):
         """Получить инфу о всех фотосалонах"""

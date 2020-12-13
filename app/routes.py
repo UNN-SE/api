@@ -17,7 +17,9 @@ def setup_orders():
     app.add_url_rule('/api/orders/', view_func=orders_view, methods=['GET', 'POST'])
     order_item_view = OrderItemController.as_view('order_item_api')
     app.add_url_rule('/api/orders/<int:order_id>', view_func=order_item_view, methods=['GET', 'PUT'])
-    # TODO загрузка фото и комментарии к заказу
+    upload_photo_view = OrderItemController.upload_photo
+    app.add_url_rule('/api/orders/<int:order_id>/upload', methods=['POST'],
+                     view_func=upload_photo_view)
 
 
 def setup_stores():
