@@ -47,8 +47,8 @@ def red_eye_reduction(src_img):
 
 
 def main():
-    src_path = os.path.join("app", "static", "mock", "lena.png")
-    src_img = cv.imread(src_path)
+    fuck = os.path.join("app", "static", "mock", "lena.png")
+    src_img = cv.imread(fuck)
     out_img = red_eye_reduction(src_img)
     out_img = equalize_histogram(out_img)
     cv.imshow("SOURCE", src_img)
