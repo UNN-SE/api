@@ -2,7 +2,7 @@ from flask import jsonify, request, make_response
 from flask.views import MethodView
 from werkzeug.utils import secure_filename
 
-from . import order_repository
+from .logic import order_repository
 from .models import Order
 
 
