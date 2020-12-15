@@ -5,24 +5,29 @@ from .models import PhotoSalon
 
 
 class StoresController(MethodView):
-    def get(self):
+    @staticmethod
+    def get():
         """Получить инфу о всех фотосалонах"""
         # TODO return orders of current user
         return jsonify(orders=[PhotoSalon.mock(), ])
 
-    def post(self):
+    @staticmethod
+    def post():
         """Создание фотосалона"""
         return make_response(jsonify({"id": 1, "msg": "order is created"}), 200)
 
 
 class StoreItemController(MethodView):
-    def get(self, id):
+    @staticmethod
+    def get(item_id):
         """Инфо о конкретном фотосалоне"""
-        return jsonify(PhotoSalon.mock(id))
+        return jsonify(PhotoSalon.mock(item_id))
 
-    def put(self, id):
+    @staticmethod
+    def put(item_id):
         """Правка фотосалона"""
-        return make_response(jsonify({"id": id, "msg": "store is changed"}), 200)
+        return make_response(jsonify({"id": item_id, "msg": "store is changed"}), 200)
 
-    def stat(id, params):
-        return jsonify(PhotoSalon.mock_stat(id))
+    @staticmethod
+    def stat(item_id, params):
+        return jsonify(PhotoSalon.mock_stat(item_id))

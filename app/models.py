@@ -27,7 +27,7 @@ class Employee(User):
     photo_salon_id = 1
 
 
-class PhotoSalon():
+class PhotoSalon:
     id = 1
     address = "Пушкина дом Колотушкина"
 
@@ -46,7 +46,7 @@ class PhotoSalon():
         }
 
 
-class Order():
+class Order:
     id = 1
     client_id = 1
     source = "static/mock/lena.png"
@@ -64,13 +64,13 @@ class Order():
         }
 
 
-class Order_Service():
-    id = 1 
+class OrderService:
+    id = 1
     order_id = 1
     service_id = 1
 
 
-class Service():
+class Service:
     id = 1
     tittle = "test"
     description = "Описание"
@@ -86,13 +86,13 @@ class Service():
         }
 
 
-class PhotoSalon_Equipment():
+class PhotoSalonEquipment:
     id = 1
     photo_salon_id = 1
     equipment_id = 1
 
 
-class Equipment():
+class Equipment:
     id = 1
     tittle = "tittle"
     type = "type"

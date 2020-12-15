@@ -56,9 +56,9 @@ def setup_equipments():
 def hello_world():
     return 'TODO render main page'
 
+
 setup_users()
 setup_orders()
 setup_stores()
 setup_services()
 setup_equipments()
-
