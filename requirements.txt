@@ -3,3 +3,6 @@ python-dotenv
 Werkzeug
 opencv-python
 pylint
+pytest
+pytest-flask
+pytest-cov
