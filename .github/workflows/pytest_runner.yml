@@ -2,8 +2,6 @@ name: PyTest Runner
 
 on:
   pull_request:
-    branches:
-      - master
 
 jobs:
   build:
