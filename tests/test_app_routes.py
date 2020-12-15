@@ -15,9 +15,6 @@ def teardown():
 
 
 class TestAppRoutes:
-    def __init__(self):
-        self._socket = None
-
     def setup(self):
         self._socket = s.socket(s.AF_INET, s.SOCK_STREAM)
 
