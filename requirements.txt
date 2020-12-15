@@ -6,3 +6,4 @@ pylint
 pytest
 pytest-flask
 pytest-cov
+requests

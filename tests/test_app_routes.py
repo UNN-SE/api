@@ -1,9 +1,9 @@
-import socket as s
+import requests
 from flask import request
 import photostore
 
 
-def setup():
+def setup_module():
     photostore.app.run()
 
 
@@ -16,11 +16,12 @@ def teardown():
 
 class TestAppRoutes:
     def setup(self):
-        self._socket = s.socket(s.AF_INET, s.SOCK_STREAM)
+        pass
 
     def teardown(self):
-        self._socket.close()
+        pass
 
     def test_server_connect(self):
-        self._socket.connect(('localhost', 8081))
-        assert self._socket
+        response = requests.get("http://localhost:5000/api/orders")
+        assert response.status_code == 200
+        assert response.headers['Content-Type'] == "application/json"
