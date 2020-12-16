@@ -3,17 +3,6 @@ from flask import request
 import photostore
 
 
-def setup_module():
-    photostore.app.run()
-
-
-def teardown():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-
-
 class TestAppRoutes:
     def setup(self):
         pass
