@@ -10,7 +10,8 @@ class User:
             "id": user_id,
             "role": "client",
             "email": "test@test.com",
-            "phone": 891012345676
+            "phone": 891012345676б
+            "orders": [],
             # TODO вписать поля, нужные фронтенду
         }
 
