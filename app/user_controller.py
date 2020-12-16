@@ -7,6 +7,6 @@ from .models import User
 class UserController(MethodView):
     def get(self, user_id):
         """Получить инфу о юзере"""
-        return jsonify(orders=[User.mock(user_id), ])
+        return jsonify(User.mock(user_id))
 
 # TODO авторизация, продумать стркутуру для различных ролей пользователей
