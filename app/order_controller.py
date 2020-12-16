@@ -3,29 +3,33 @@ from flask.views import MethodView
 from werkzeug.utils import secure_filename
 
 from .models import Order
-from app import order_repository
+from app import order_repository, auth
 
 
 class OrdersController(MethodView):
+    @auth.login_required
     def get(self):
         """Получить инфу о всех заказах юзера"""
         # TODO return orders of current user
-        return jsonify(orders=[Order.mock(), ])
+        return jsonify(orders=[Order.mock(), ], user_id=auth.current_user()['id'])
 
+    @auth.login_required
     def post(self):
         """Создание заказа"""
-        # TODO загрузка фото в заказ
         return make_response(jsonify({"id": 1, "msg": "order is created"}), 200)
 
 
 class OrderItemController(MethodView):
+    @auth.login_required
     def get(self, order_id):
         """Инфо о конкретном заказе"""
         return jsonify(Order.mock(order_id))
 
+    @auth.login_required
     def put(self, order_id):
         return make_response(jsonify({"id": order_id, "msg": "order is changed"}), 200)
 
+    @auth.login_required
     def upload_photo(order_id):
         file = next(request.files.values())  # first file in request
         params = request.args if len(request.args) > 0 else request.form
