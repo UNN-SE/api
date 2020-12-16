@@ -1,16 +1,16 @@
 import requests
+import pytest
 from flask import request
-import photostore
+from app import create_app
 
 
-class TestAppRoutes:
-    def setup(self):
-        pass
+@pytest.fixture
+def app():
+    test_app = create_app()
+    return test_app
 
-    def teardown(self):
-        pass
 
-    def test_server_connect(self):
-        response = requests.get("http://localhost:5000/api/orders")
-        assert response.status_code == 200
-        assert response.headers['Content-Type'] == "application/json"
+def test_server_connect(client):
+    response = client.get("http://localhost:5000/api/orders")
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == "application/json"
