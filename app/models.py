@@ -11,7 +11,6 @@ class User:
             "role": "client",
             "email": "test@test.com",
             "phone": 891012345676,
-            "orders": [],
             # TODO вписать поля, нужные фронтенду
         }
 
