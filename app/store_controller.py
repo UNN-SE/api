@@ -17,17 +17,17 @@ class StoresController(MethodView):
         return make_response(jsonify({"id": 1, "msg": "order is created"}), 200)
 
 
-class StoreItemController(MethodView):
+class StoreController(MethodView):
     @staticmethod
-    def get(item_id):
+    def get(store_id):
         """Инфо о конкретном фотосалоне"""
-        return jsonify(PhotoSalon.mock(item_id))
+        return jsonify(PhotoSalon.mock(store_id))
 
     @staticmethod
-    def put(item_id):
+    def put(store_id):
         """Правка фотосалона"""
-        return make_response(jsonify({"id": item_id, "msg": "store is changed"}), 200)
+        return make_response(jsonify({"id": store_id, "msg": "store is changed"}), 200)
 
     @staticmethod
-    def stat(item_id, params):
-        return jsonify(PhotoSalon.mock_stat(item_id))
+    def stat(store_id, params):
+        return jsonify(PhotoSalon.mock_stat(store_id))
