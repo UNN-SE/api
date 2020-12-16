@@ -1,3 +1,10 @@
 flask
-python-dotenv
 SQLAlchemy
+flask_cors
+python-dotenv
+Werkzeug
+opencv-python
+pylint
+pytest
+pytest-flask
+pytest-cov
