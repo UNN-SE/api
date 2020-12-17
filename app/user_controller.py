@@ -5,7 +5,8 @@ from .models import User
 
 
 class UserController(MethodView):
-    def get(self, user_id):
+    @staticmethod
+    def get(user_id):
         """Получить инфу о юзере"""
         return jsonify(User.mock(user_id))
 
