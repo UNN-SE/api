@@ -1,7 +1,7 @@
 from flask import jsonify, request, make_response
 from flask.views import MethodView
 
-from .models import PhotoSalon
+from .models import Photostore
 
 
 class StoresController(MethodView):
@@ -9,7 +9,7 @@ class StoresController(MethodView):
     def get():
         """Получить инфу о всех фотосалонах"""
         # TODO return orders of current user
-        return jsonify(orders=[PhotoSalon.mock(), ])
+        return jsonify(orders=[Photostore.mock(), ])
 
     @staticmethod
     def post():
