@@ -25,6 +25,11 @@ class UserAuthController(MethodView):
         else:
             return make_response(jsonify({"msg": "login error"}), 401)
 
+    @staticmethod
+    @auth.login_required
+    def logout():
+        return make_response(jsonify({"msg": "logged out"}), 200)
+
 
 class UserController(MethodView):
     @auth.login_required

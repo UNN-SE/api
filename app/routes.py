@@ -16,6 +16,9 @@ def setup_users():
     user_auth_view = UserAuthController.as_view('user_auth_api')
     app.add_url_rule('/api/users/login', view_func=user_auth_view, methods=['POST'])
 
+    app.add_url_rule('/api/users/logout', methods=['GET'],
+                     view_func=UserAuthController.logout)
+
 
 def setup_orders():
     from .order_controller import OrdersController, OrderItemController
