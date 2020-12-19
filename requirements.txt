@@ -1,6 +1,6 @@
 flask
 Flask-SQLAlchemy
-flask_cors
+flask-cors
 flask-httpauth
 python-dotenv
 Werkzeug
