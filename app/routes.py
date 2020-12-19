@@ -6,12 +6,15 @@ app.url_map.strict_slashes = False
 
 
 def setup_users():
-    from .user_controller import UsersController, UserController
+    from .user_controller import UsersController, UserController, UserAuthController
     users_view = UsersController.as_view('users_view')
     app.add_url_rule('/api/users/', view_func=users_view, methods=['POST'])
 
     user_view = UserController.as_view('user_api')
     app.add_url_rule('/api/users/<int:user_id>', view_func=user_view, methods=['GET'])
+
+    user_auth_view = UserAuthController.as_view('user_auth_api')
+    app.add_url_rule('/api/users/login', view_func=user_auth_view, methods=['POST'])
 
 
 def setup_orders():

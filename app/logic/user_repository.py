@@ -24,7 +24,7 @@ class UserRepositoryMock(UserRepository):
     def verify_token(token):
         try:
             log.info(serializer.loads(token))
-            return User.mock(token)
+            return User.mock(1)
         except BadSignature:
             if token:
                 return User.mock(int(token))

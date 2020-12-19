@@ -14,11 +14,16 @@ class UsersController(MethodView):
 
 class UserAuthController(MethodView):
     @staticmethod
-    def get():
+    def post():
         """Авторизация юзера"""
-        login = 0
-        password = None
-        user_repository.auth(login, password)
+        data = request.get_json()
+        login = data['login']
+        password = data['password']
+        token = user_repository.authenticate(login, password)
+        if token:
+            return make_response(jsonify({"user_id": 1, "token": token, "msg": "logged in"}), 200)
+        else:
+            return make_response(jsonify({"msg": "login error"}), 401)
 
 
 class UserController(MethodView):
