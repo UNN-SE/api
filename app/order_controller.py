@@ -10,8 +10,13 @@ class OrdersController(MethodView):
     @auth.login_required
     def get(self):
         """Получить инфу о всех заказах юзера"""
-        # TODO return orders of current user
-        return jsonify(orders=[Order.mock(), ], user_id=auth.current_user()['id'])
+        if request.args and auth.current_user()['role'] != 'client':
+            # TODO filter для всех возможных параметров запроса
+            if request.args['user_id']:
+                return jsonify(orders=[Order.mock(), ], user_id=request.args['user_id'])
+        elif auth.current_user()['role'] == 'client':
+            # получить заказы залогиненого клиента
+            return jsonify(orders=[Order.mock(), ], user_id=auth.current_user()['id'])
 
     @auth.login_required
     def post(self):
