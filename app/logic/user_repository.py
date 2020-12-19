@@ -1,4 +1,4 @@
-from app import log, serializer, auth
+from app import LOG, SERIALIZER, AUTH
 from app.models import User
 from itsdangerous import BadSignature
 
@@ -9,7 +9,7 @@ class UserRepository:
         raise NotImplementedError
 
     @staticmethod
-    @auth.verify_token
+    @AUTH.verify_token
     def verify_token(token):
         raise NotImplementedError
 
@@ -17,13 +17,13 @@ class UserRepository:
 class UserRepositoryMock(UserRepository):
     @staticmethod
     def authenticate(login, password):
-        return serializer.dumps(User.mock(1)).decode('utf-8')
+        return SERIALIZER.dumps(User.mock(1)).decode('utf-8')
 
     @staticmethod
-    @auth.verify_token
+    @AUTH.verify_token
     def verify_token(token):
         try:
-            log.info(serializer.loads(token))
+            LOG.info(SERIALIZER.loads(token))
             return User.mock(1)
         except BadSignature:
             if token:

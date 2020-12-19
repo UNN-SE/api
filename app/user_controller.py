@@ -2,7 +2,7 @@ from flask import jsonify, request, make_response
 from flask.views import MethodView
 
 from .models import User
-from app import user_repository, auth
+from app import USER_REPOSITORY, AUTH
 
 
 class UsersController(MethodView):
@@ -19,21 +19,20 @@ class UserAuthController(MethodView):
         data = request.get_json()
         login = data['login']
         password = data['password']
-        token = user_repository.authenticate(login, password)
+        token = USER_REPOSITORY.authenticate(login, password)
         if token:
             return make_response(jsonify({"user_id": 1, "token": token, "msg": "logged in"}), 200)
-        else:
-            return make_response(jsonify({"msg": "login error"}), 401)
+        return make_response(jsonify({"msg": "login error"}), 401)
 
     @staticmethod
-    @auth.login_required
+    @AUTH.login_required
     def logout():
         return make_response(jsonify({"msg": "logged out"}), 200)
 
 
 class UserController(MethodView):
     @staticmethod
-    @auth.login_required
+    @AUTH.login_required
     def get(user_id):
         """Получить инфу о юзере"""
         return jsonify(User.mock(user_id))
