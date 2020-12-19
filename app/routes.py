@@ -32,13 +32,13 @@ def setup_orders():
 
 
 def setup_stores():
-    from .store_controller import StoresController, StoreItemController
+    from .store_controller import StoresController, StoreController
     stores_view = StoresController.as_view('stores_api')
     app.add_url_rule('/api/stores/', view_func=stores_view, methods=['GET', 'POST'])
-    item_view = StoreItemController.as_view('store_item_api')
-    app.add_url_rule('/api/stores/<int:id>', view_func=item_view, methods=['GET', 'PUT'])
-    stat_view = StoreItemController.stat
-    app.add_url_rule('/api/stores/<int:id>/stat', view_func=stat_view, defaults={'params': None}, methods=['GET'])
+    store_view = StoreController.as_view('store_api')
+    app.add_url_rule('/api/stores/<int:store_id>', view_func=store_view, methods=['GET', 'PUT'])
+    stat_view = StoreController.stat
+    app.add_url_rule('/api/stores/<int:store_id>/stat', view_func=stat_view, defaults={'params': None}, methods=['GET'])
 
 
 def setup_services():
@@ -46,7 +46,7 @@ def setup_services():
     services_view = ServicesController.as_view('services_api')
     app.add_url_rule('/api/services/', view_func=services_view, methods=['GET', 'POST'])
     item_view = ServiceItemController.as_view('service_item_api')
-    app.add_url_rule('/api/services/<int:id>', view_func=item_view, methods=['GET', 'PUT', 'DELETE'])
+    app.add_url_rule('/api/services/<int:service_id>', view_func=item_view, methods=['GET', 'PUT', 'DELETE'])
 
 
 def setup_equipments():
@@ -57,7 +57,7 @@ def setup_equipments():
     app.add_url_rule('/api/stores/<int:store_id>/equipments/', methods=['GET'],
                      view_func=equipments_view) # TODO move it to StoreController?
     item_view = EquipmentItemController.as_view('equipment_item_api')
-    app.add_url_rule('/api/stores/<int:store_id>/equipments/<int:id>', methods=['GET', 'POST', 'DELETE'],
+    app.add_url_rule('/api/stores/<int:store_id>/equipments/<int:entity_id>', methods=['GET', 'POST', 'DELETE'],
                      view_func=item_view)
 
 
@@ -65,9 +65,9 @@ def setup_equipments():
 def hello_world():
     return 'TODO render main page'
 
+
 setup_users()
 setup_orders()
 setup_stores()
 setup_services()
 setup_equipments()
-
