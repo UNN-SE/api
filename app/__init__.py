@@ -21,7 +21,7 @@ def create_app():
     APP = loc_app
     loc_app.config.from_object(Config)
     global LOG
-    LOG = loc_app.logger
+    LOG = loc_app.logger()
     CORS(loc_app)
 
     global AUTH
@@ -42,4 +42,3 @@ def create_app():
     from app import routes, models
 
     return loc_app
-

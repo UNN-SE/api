@@ -35,4 +35,4 @@ class UserController(MethodView):
     @AUTH.login_required
     def get(user_id):
         """Получить инфу о юзере"""
-        return jsonify(User.mock())
+        return jsonify(User.mock(user_id))
