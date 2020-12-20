@@ -31,7 +31,6 @@ def create_app():
 
     global DB
     DB = SQLAlchemy(loc_app)
-    from app import routes, models
 
     from .logic.order_repository import OrderRepositoryFolder
     from .logic.user_repository import UserRepositoryMock
@@ -40,5 +39,7 @@ def create_app():
     if loc_app.config['NO_DB']:
         ORDER_REPOSITORY = OrderRepositoryFolder()
         USER_REPOSITORY = UserRepositoryMock()
+    from app import routes, models
 
     return loc_app
+

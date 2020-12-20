@@ -2,7 +2,7 @@ from flask import jsonify, request, make_response
 from flask.views import MethodView
 
 from .models import User
-from app import USER_REPOSITORY, AUTH
+from app import USER_REPOSITORY, AUTH, LOG
 
 
 class UsersController(MethodView):
@@ -16,7 +16,7 @@ class UserAuthController(MethodView):
     @staticmethod
     def post():
         """Авторизация юзера"""
-        data = request.get_json()
+        data = request.form
         login = data['login']
         password = data['password']
         token = USER_REPOSITORY.authenticate(login, password)
@@ -35,4 +35,4 @@ class UserController(MethodView):
     @AUTH.login_required
     def get(user_id):
         """Получить инфу о юзере"""
-        return jsonify(User.mock(user_id))
+        return jsonify(User.mock())

@@ -10,7 +10,7 @@ class UserType(enum.Enum):
     employee = "EMPLOYEE"
 
 
-class User(DB.Model):
+class User():
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(120), unique=False, nullable=False)
@@ -19,13 +19,16 @@ class User(DB.Model):
     type = Column(Enum(UserType, nullable=False))
     workingspace = Column(Integer, ForeignKey("photostore.id"))
 
-    def mock(self, user_id):
-        user = User()
-        user.type = UserType.client
-        user.id = user_id
-        user.email = ""
-        user.password = ""
-        user.phone = ""
+
+    @staticmethod
+    def mock(user_id):
+        user = {
+            "type": 1,
+            "id": user_id,
+            "email": "",
+            "password": "",
+            "phone": ""
+        }
         return user
 
 
@@ -57,7 +60,7 @@ class Service(DB.Model):
 class Photostore(DB.Model):
     id = Column(Integer, primary_key=True)
     address = Column(String(120), unique=True, nullable=False)
-    equipments = relationship("Equipment", secondary=photostoreEquipment, back_populates="photostores")
+    equipments = relationship("Equipment", secondary=photostoreEquipment, back_populates="photoStore")
     workers = relationship("User")
 
 
