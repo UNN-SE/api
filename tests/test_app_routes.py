@@ -29,5 +29,3 @@ def test_server_signin(client):
                            follow_redirects=True)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/json"
-    # response = client.get("http://localhost:5000/api/stores/")
-    # assert response.status_code == 200
