@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -19,4 +19,5 @@ jobs:
           pip install -r requirements.txt
       - name: Run PyTest
         run: |
+          export NO_DB=true
           py.test -v --cov=app tests/

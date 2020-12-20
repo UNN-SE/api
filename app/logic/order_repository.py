@@ -19,12 +19,12 @@ class OrderRepositoryFolder(OrderRepository):
         #     raise ValueError('Фото уже существует')
 
         try:
-            with open(save_path, 'wb') as f:
-                f.seek(chunk_offset)
-                f.write(stream.read())
-        except OSError as e:
-            log.exception(f'Could not write to file {e}')
-            raise OSError("Ошибка записи на диск")
+            with open(save_path, 'wb') as file:
+                file.seek(chunk_offset)
+                file.write(stream.read())
+        except OSError as err:
+            log.exception(f'Could not write to file {err}')
+            raise OSError("Ошибка записи на диск") from err
 
         # TODO ограничение максимального размера файла
         if chunk_index + 1 == chunks_count:
@@ -34,7 +34,6 @@ class OrderRepositoryFolder(OrderRepository):
                           f"Was {os.path.getsize(save_path)} but we"
                           f" expected {size} ")
                 raise ValueError('Некорректный размер')
-            else:
-                log.info(f'Файл {filename} загружен успешно')
+            log.info(f'Файл {filename} загружен успешно')
         else:
             log.debug(f'Chunk {chunk_index + 1}/{chunks_count}, file {filename}')

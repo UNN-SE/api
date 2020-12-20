@@ -19,6 +19,7 @@ class OrdersController(MethodView):
         elif auth.current_user()['role'] == 'client':
             # получить заказы залогиненого клиента
             return jsonify(orders=[Order.mock(), ], user_id=auth.current_user()['id'])
+        return None
 
     @staticmethod
     @auth.login_required

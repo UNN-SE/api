@@ -2,7 +2,7 @@ from flask import jsonify, request, make_response
 from flask.views import MethodView
 
 
-from .models import Equipment, PhotoSalonEquipment
+from .models import Equipment
 from app import auth
 
 

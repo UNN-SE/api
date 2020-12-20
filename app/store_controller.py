@@ -24,7 +24,7 @@ class StoreController(MethodView):
     @auth.login_required
     def get(store_id):
         """Инфо о конкретном фотосалоне"""
-        return jsonify(PhotoSalon.mock(store_id))
+        return jsonify(Photostore.mock(store_id))
 
     @staticmethod
     @auth.login_required
@@ -36,4 +36,4 @@ class StoreController(MethodView):
     @auth.login_required
     def stat(store_id, params):
         """Статистика фотосалона"""
-        return jsonify(PhotoSalon.mock_stat(store_id))
+        return jsonify(Photostore.mock_stat(store_id))
