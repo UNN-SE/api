@@ -29,3 +29,6 @@ def test_server_signin(client):
                            follow_redirects=True)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/json"
+    response = client.get('/api/users/logout',
+                          headers={'Authorization': f'Bearer {response.json["token"]}'})
+    assert response.status_code == 200
