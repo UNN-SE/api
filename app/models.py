@@ -19,17 +19,15 @@ class User():
     type = Column(Enum(UserType, nullable=False))
     workingspace = Column(Integer, ForeignKey("photostore.id"))
 
-
     @staticmethod
-    def mock(user_id):
-        user = {
-            "type": 1,
+    def mock(user_id=1):
+        return {
             "id": user_id,
-            "email": "",
-            "password": "",
-            "phone": ""
+            "role": "client",
+            "email": "test@test.com",
+            "phone": 891012345676,
+            # TODO вписать поля, нужные фронтенду
         }
-        return user
 
 
 photostoreEquipment = Table("photostore_Equipment", db.Model.metadata,
@@ -48,6 +46,16 @@ class Order(db.Model):
     status = Column(Integer)
     services = relationship("Service", secondary=orderService, back_populates="orders")
 
+    @staticmethod
+    def mock(order_id=1):
+        return {
+            "id": order_id,
+            "client_id": 1,
+            "source": "static/mock/lena.png",
+            "photostore_id": 1,
+            "status": 1,
+        }
+
 
 class Service(db.Model):
     id = Column(Integer, primary_key=True)
@@ -56,6 +64,15 @@ class Service(db.Model):
     price = Column(Integer)
     orders = relationship("Order", secondary=orderService, back_populates="services")
 
+    @staticmethod
+    def mock(service_id=1):
+        return {
+            "id": service_id,
+            "title": "test",
+            "description": "Описание",
+            "price": 1000
+        }
+
 
 class Photostore(db.Model):
     id = Column(Integer, primary_key=True)
@@ -63,9 +80,31 @@ class Photostore(db.Model):
     equipments = relationship("Equipment", secondary=photostoreEquipment, back_populates="photoStore")
     workers = relationship("User")
 
+    @staticmethod
+    def mock(salon_id=1):
+        return {
+            "id": salon_id,
+            "address": "Пушкина дом Колотушкина"
+        }
+
+    @staticmethod
+    def mock_stat(salon_id=1):
+        return {
+            "id": salon_id,
+            "profit_month": "$5000"
+        }
+
 
 class Equipment(db.Model):
     id = Column(Integer, primary_key=True)
-    tittle = Column(String(120), unique=True, nullable=False)
+    title = Column(String(120), unique=True, nullable=False)
     type = Column(String(120), unique=True, nullable=False)
     photoStore = relationship("Photostore", secondary=photostoreEquipment, back_populates="equipments")
+
+    @staticmethod
+    def mock(equipment_id=1):
+        return {
+            "id": equipment_id,
+            "title": "Epson JH431",
+            "type": "printer"
+        }
