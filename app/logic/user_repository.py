@@ -29,3 +29,19 @@ class UserRepositoryMock(UserRepository):
             if token:
                 return User.mock(int(token))
         return False
+
+class UserRepositoryBD(UserRepository):
+    @staticmethod
+    def authenticate(login, password):
+        return serializer.dumps(User.email, User.password)
+
+    @staticmethod
+    @auth.verify_token
+    def verify_token(token):
+        try:
+            log.info(serializer.loads(token))
+            return User.id(token)
+        except BadSignature:
+            if token:
+                return User.id(token)
+        return False
