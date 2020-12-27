@@ -10,4 +10,4 @@ pytest
 pytest-flask
 pytest-cov
 itsdangerous
-psycopg2
+psycopg2-binary
