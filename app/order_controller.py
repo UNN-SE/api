@@ -63,6 +63,12 @@ class OrderItemController(MethodView):
     @staticmethod
     @auth.login_required
     def upload_photo(order_id):
+        info = order_repository.info(order_id)
+        if info is None:
+            return make_response(jsonify({}), 404)
+        elif auth.current_user().id != info['client']:
+            return make_response(jsonify({"id": order_id, "msg": "forbidden"}), 403)
+
         file = next(request.files.values())  # first file in request
         params = request.args if len(request.args) > 0 else request.form
         # https://stackoverflow.com/questions/44727052/handling-large-file-uploads-with-flask
@@ -74,7 +80,7 @@ class OrderItemController(MethodView):
 
         try:
             # 400 and 500s will tell dropzone that an error occurred and show an error
-            order_repository.save_photo(order_id, chunk_index, total_chunks, chunk_byte_offset, file.stream, file_size)
+            order_repository.upload_photo(order_id, chunk_index, total_chunks, chunk_byte_offset, file.stream, file_size)
         except ValueError as err:
             return make_response(jsonify({"id": order_id, "msg": f"{err.args[0]}"}), 400)
         except OSError as err:
