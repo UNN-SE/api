@@ -1,9 +1,18 @@
-from app import log, serializer, auth
-from app.models import User
+from app import log, serializer, auth, db
+from app.models import User, RevokedTokens
 from itsdangerous import BadSignature
+from sqlalchemy.exc import *
 
 
 class UserRepository:
+    @staticmethod
+    def info(user_id):
+        raise NotImplementedError
+
+    @staticmethod
+    def register(**kwargs):
+        raise NotImplementedError
+
     @staticmethod
     def authenticate(login, password):
         raise NotImplementedError
@@ -13,8 +22,20 @@ class UserRepository:
     def verify_token(token):
         raise NotImplementedError
 
+    @staticmethod
+    def logout(token):
+        raise NotImplementedError
+
 
 class UserRepositoryMock(UserRepository):
+    @staticmethod
+    def info(user_id):
+        return User.mock(user_id)
+
+    @staticmethod
+    def register(**kwargs):
+        return 1
+
     @staticmethod
     def authenticate(login, password):
         return serializer.dumps(User.mock(1)).decode('utf-8')
@@ -29,3 +50,54 @@ class UserRepositoryMock(UserRepository):
             if token:
                 return User.mock(int(token))
         return False
+
+    @staticmethod
+    def logout(token):
+        pass
+
+
+class UserRepositoryDB(UserRepository):
+    @staticmethod
+    def info(user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return {"id": user.id, "email": user.email, "phone": user.phone}
+
+    @staticmethod
+    def register(**kwargs):
+        new_user = User(email=kwargs['login'],
+                        password=kwargs['password'],
+                        phone=kwargs['phone'],
+                        type=kwargs['type'])
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return new_user.id
+        except SQLAlchemyError as exc:
+            raise exc
+
+    @staticmethod
+    def authenticate(login, password):
+        user = User.query.filter_by(email=login, password=password).first()
+        if user:
+            return user.id, serializer.dumps({'username': login}).decode('utf-8')
+        return None
+
+    @staticmethod
+    @auth.verify_token
+    def verify_token(token):
+        try:
+            if not RevokedTokens.query.filter_by(token=token).first():
+                data = serializer.loads(token)
+                return User.query.filter_by(email=data['username']).first()
+        except BadSignature:
+            pass
+        return False
+
+    @staticmethod
+    def logout(token):
+        try:
+            db.session.add(RevokedTokens(token=token))
+            db.session.commit()
+            return True
+        except SQLAlchemyError as exc:
+            raise exc

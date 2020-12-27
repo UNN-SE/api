@@ -10,7 +10,7 @@ class UserType(enum.Enum):
     employee = "EMPLOYEE"
 
 
-class User():
+class User(db.Model):
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(120), unique=False, nullable=False)
@@ -28,6 +28,11 @@ class User():
             "phone": 891012345676,
             # TODO вписать поля, нужные фронтенду
         }
+
+
+class RevokedTokens(db.Model):
+    __tablename__ = 'revoked_tokens'
+    token = Column(String, primary_key=True)
 
 
 photostoreEquipment = Table("photostore_Equipment", db.Model.metadata,

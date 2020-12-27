@@ -3,7 +3,7 @@ from flask.views import MethodView
 from werkzeug.utils import secure_filename
 
 from .logic import order_repository
-from .models import Order
+from .models import Order, UserType
 from app import order_repository, auth
 
 
@@ -12,13 +12,13 @@ class OrdersController(MethodView):
     @auth.login_required
     def get():
         """Получить инфу о всех заказах юзера"""
-        if request.args and auth.current_user()['role'] != 'client':
+        if request.args and auth.current_user().type != UserType.client:
             # TODO filter для всех возможных параметров запроса
             if request.args['user_id']:
                 return jsonify(orders=[Order.mock(), ], user_id=request.args['user_id'])
-        elif auth.current_user()['role'] == 'client':
+        elif auth.current_user().type == UserType.client:
             # получить заказы залогиненого клиента
-            return jsonify(orders=[Order.mock(), ], user_id=auth.current_user()['id'])
+            return jsonify(orders=[Order.mock(), ], user_id=auth.current_user().id)
         return None
 
     @staticmethod
