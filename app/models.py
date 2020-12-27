@@ -30,6 +30,11 @@ class User(db.Model):
         }
 
 
+class RevokedTokens(db.Model):
+    __tablename__ = 'revoked_tokens'
+    token = Column(String, primary_key=True)
+
+
 photostoreEquipment = Table("photostore_Equipment", db.Model.metadata,
                             Column("photostore_id", Integer, ForeignKey("photostore.id")),
                             Column("equipment_id", Integer, ForeignKey("equipment.id")))

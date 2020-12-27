@@ -1,5 +1,5 @@
 from app import log, serializer, auth, db
-from app.models import User
+from app.models import User, RevokedTokens
 from itsdangerous import BadSignature
 from sqlalchemy.exc import *
 
@@ -72,12 +72,18 @@ class UserRepositoryDB(UserRepository):
     @auth.verify_token
     def verify_token(token):
         try:
-            data = serializer.loads(token)
-            return User.query.filter_by(email=data['username']).first()
+            if not RevokedTokens.query.filter_by(token=token).first():
+                data = serializer.loads(token)
+                return User.query.filter_by(email=data['username']).first()
         except BadSignature:
             pass
         return False
 
     @staticmethod
     def logout(token):
-        pass
+        try:
+            db.session.add(RevokedTokens(token=token))
+            db.session.commit()
+            return True
+        except SQLAlchemyError as exc:
+            raise exc

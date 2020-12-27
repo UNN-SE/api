@@ -36,7 +36,7 @@ class UserAuthController(MethodView):
     @auth.login_required
     def logout():
         try:
-            token = request.args['token']
+            token = auth.get_auth()['token']
             user_repository.logout(token)
             return make_response(jsonify({"msg": f"Goog bye, {auth.current_user().email}"}), 200)
         except Exception as e:
