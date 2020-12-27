@@ -12,20 +12,29 @@ class OrdersController(MethodView):
     @auth.login_required
     def get():
         """Получить инфу о всех заказах юзера"""
-        if request.args and auth.current_user().type != UserType.client:
-            # TODO filter для всех возможных параметров запроса
-            if request.args['user_id']:
-                return jsonify(orders=[Order.mock(), ], user_id=request.args['user_id'])
-        elif auth.current_user().type == UserType.client:
-            # получить заказы залогиненого клиента
-            return jsonify(orders=[Order.mock(), ], user_id=auth.current_user().id)
-        return None
+        # параметры фильтра совпадают с названиями полей БД
+
+        # для сотрудников и менеджера
+        if auth.current_user().type != UserType.client:
+            return jsonify(orders=order_repository.filter(request.args.to_dict()))
+        else:
+            # клиент может фильтровать только свои заказы
+            user_id = auth.current_user().id
+            if request.args.get('client_id', None) and int(request.args['client_id']) != user_id:
+                return make_response(jsonify({}), 403)
+            else:
+                args = request.args.to_dict()
+                args['client_id'] = user_id
+                return jsonify(orders=order_repository.filter(args), user_id=user_id)
 
     @staticmethod
     @auth.login_required
     def post():
         """Создание заказа"""
-        return make_response(jsonify({"id": 1, "msg": "order is created"}), 200)
+        param = request.form.to_dict()
+        param['client_id'] = auth.current_user().id
+        id = order_repository.create(param)
+        return make_response(jsonify({"id": id, "msg": "order is created"}), 200)
 
 
 class OrderItemController(MethodView):
@@ -33,7 +42,13 @@ class OrderItemController(MethodView):
     @auth.login_required
     def get(order_id):
         """Инфо о конкретном заказе"""
-        return jsonify(Order.mock(order_id))
+        order_info = order_repository.info(order_id)
+        if order_info is None:
+            return make_response({'msg': 'No such order'}, 404)
+        elif auth.current_user().type == UserType.client and auth.current_user().id != order_info['client']:
+            return make_response({}, 403)
+        else:
+            return make_response(jsonify(order_info), 200)
 
     @staticmethod
     @auth.login_required
