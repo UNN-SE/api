@@ -29,13 +29,18 @@ class UserAuthController(MethodView):
         password = data['password']
         token = user_repository.authenticate(login, password)
         if token:
-            return make_response(jsonify({"user_id": 1, "token": token, "msg": "logged in"}), 200)
-        return make_response(jsonify({"msg": "login error"}), 401)
+            return make_response(jsonify({"token": token, "msg": "logged in"}), 200)
+        return make_response(jsonify({"msg": "Incorrect username or password"}), 401)
 
     @staticmethod
     @auth.login_required
     def logout():
-        return make_response(jsonify({"msg": "logged out"}), 200)
+        try:
+            token = request.args['token']
+            user_repository.logout(token)
+            return make_response(jsonify({"msg": f"Goog bye, {auth.current_user().email}"}), 200)
+        except Exception as e:
+            return make_response(jsonify({"msg": str(e)}), 400)
 
 
 class UserController(MethodView):

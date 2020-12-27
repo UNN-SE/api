@@ -18,6 +18,10 @@ class UserRepository:
     def verify_token(token):
         raise NotImplementedError
 
+    @staticmethod
+    def logout(token):
+        raise NotImplementedError
+
 
 class UserRepositoryMock(UserRepository):
     @staticmethod
@@ -39,6 +43,10 @@ class UserRepositoryMock(UserRepository):
                 return User.mock(int(token))
         return False
 
+    @staticmethod
+    def logout(token):
+        pass
+
 
 class UserRepositoryDB(UserRepository):
     @staticmethod
@@ -57,7 +65,7 @@ class UserRepositoryDB(UserRepository):
     @staticmethod
     def authenticate(login, password):
         if User.query.filter_by(email=login, password=password).first():
-            return serializer.dumps({'username': login})
+            return serializer.dumps({'username': login}).decode('utf-8')
         return None
 
     @staticmethod
@@ -65,7 +73,11 @@ class UserRepositoryDB(UserRepository):
     def verify_token(token):
         try:
             data = serializer.loads(token)
-            return User
+            return User.query.filter_by(email=data['username']).first()
         except BadSignature:
             pass
         return False
+
+    @staticmethod
+    def logout(token):
+        pass
