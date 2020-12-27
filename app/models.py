@@ -10,7 +10,7 @@ class UserType(enum.Enum):
     employee = "EMPLOYEE"
 
 
-class User():
+class User(db.Model):
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(120), unique=False, nullable=False)

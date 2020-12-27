@@ -1,9 +1,14 @@
-from app import log, serializer, auth
+from app import log, serializer, auth, db
 from app.models import User
 from itsdangerous import BadSignature
+from sqlalchemy.exc import *
 
 
 class UserRepository:
+    @staticmethod
+    def register(**kwargs):
+        raise NotImplementedError
+
     @staticmethod
     def authenticate(login, password):
         raise NotImplementedError
@@ -15,6 +20,10 @@ class UserRepository:
 
 
 class UserRepositoryMock(UserRepository):
+    @staticmethod
+    def register(**kwargs):
+        return 1
+
     @staticmethod
     def authenticate(login, password):
         return serializer.dumps(User.mock(1)).decode('utf-8')
@@ -30,18 +39,33 @@ class UserRepositoryMock(UserRepository):
                 return User.mock(int(token))
         return False
 
-class UserRepositoryBD(UserRepository):
+
+class UserRepositoryDB(UserRepository):
+    @staticmethod
+    def register(**kwargs):
+        new_user = User(email=kwargs['login'],
+                        password=kwargs['password'],
+                        phone=kwargs['phone'],
+                        type=kwargs['type'])
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return new_user.id
+        except SQLAlchemyError as exc:
+            raise exc
+
     @staticmethod
     def authenticate(login, password):
-        return serializer.dumps(User.email, User.password)
+        if User.query.filter_by(email=login, password=password).first():
+            return serializer.dumps({'username': login})
+        return None
 
     @staticmethod
     @auth.verify_token
     def verify_token(token):
         try:
-            log.info(serializer.loads(token))
-            return User.id(token)
+            data = serializer.loads(token)
+            return User
         except BadSignature:
-            if token:
-                return User.id(token)
+            pass
         return False
