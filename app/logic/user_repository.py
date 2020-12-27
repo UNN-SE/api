@@ -77,8 +77,9 @@ class UserRepositoryDB(UserRepository):
 
     @staticmethod
     def authenticate(login, password):
-        if User.query.filter_by(email=login, password=password).first():
-            return serializer.dumps({'username': login}).decode('utf-8')
+        user = User.query.filter_by(email=login, password=password).first()
+        if user:
+            return user.id, serializer.dumps({'username': login}).decode('utf-8')
         return None
 
     @staticmethod

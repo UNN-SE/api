@@ -29,7 +29,7 @@ class UserAuthController(MethodView):
         password = data['password']
         token = user_repository.authenticate(login, password)
         if token:
-            return make_response(jsonify({"token": token, "msg": "logged in"}), 200)
+            return make_response(jsonify({"user_id": token[0], "token": token[1], "msg": "logged in"}), 200)
         return make_response(jsonify({"msg": "Incorrect username or password"}), 401)
 
     @staticmethod
