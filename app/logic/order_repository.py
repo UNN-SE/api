@@ -22,6 +22,10 @@ class OrderRepository:
     def save_photo(order_id, chunk_index, chunks_count, chunk_offset, stream, size):
         raise NotImplementedError
 
+    @staticmethod
+    def update_status(order_id, new_status):
+        raise NotImplementedError
+
 
 class OrderRepositoryFolder(OrderRepository):
     @staticmethod
@@ -35,6 +39,10 @@ class OrderRepositoryFolder(OrderRepository):
     @staticmethod
     def info(order_id):
         return Order.mock(order_id)
+
+    @staticmethod
+    def update_status(order_id, new_status):
+        pass
 
     def save_photo(self, order_id, chunk_index, chunks_count, chunk_offset, stream, size):
         # ValueError - 4xx ошибки (проблема у клиента)
@@ -93,6 +101,11 @@ class OrderRepositoryDB(OrderRepository):
     @staticmethod
     def filter(criteria):
         return Order.query.filter_by(**criteria).all()
+
+    @staticmethod
+    def update_status(order_id, new_status):
+        Order.query.filter_by(id=order_id).update({'status': new_status})
+        db.session.commit()
 
     def save_photo(self, order_id, chunk_index, chunks_count, chunk_offset, stream, size):
         # ValueError - 4xx ошибки (проблема у клиента)

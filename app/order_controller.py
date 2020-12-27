@@ -53,7 +53,12 @@ class OrderItemController(MethodView):
     @staticmethod
     @auth.login_required
     def put(order_id):
-        return make_response(jsonify({"id": order_id, "msg": "order is changed"}), 200)
+        if auth.current_user().type != UserType.client:
+            status = int(request.form['status'])
+            order_repository.update_status(order_id, status)
+            return make_response(jsonify({"id": order_id, "msg": "state of order is updated"}), 200)
+        else:
+            return make_response(jsonify({"id": order_id, "msg": "only workers allowed"}), 403)
 
     @staticmethod
     @auth.login_required
