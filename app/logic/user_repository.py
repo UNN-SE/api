@@ -6,6 +6,10 @@ from sqlalchemy.exc import *
 
 class UserRepository:
     @staticmethod
+    def info(user_id):
+        raise NotImplementedError
+
+    @staticmethod
     def register(**kwargs):
         raise NotImplementedError
 
@@ -24,6 +28,10 @@ class UserRepository:
 
 
 class UserRepositoryMock(UserRepository):
+    @staticmethod
+    def info(user_id):
+        return User.mock(user_id)
+
     @staticmethod
     def register(**kwargs):
         return 1
@@ -49,6 +57,11 @@ class UserRepositoryMock(UserRepository):
 
 
 class UserRepositoryDB(UserRepository):
+    @staticmethod
+    def info(user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return {"id": user.id, "email": user.email, "phone": user.phone}
+
     @staticmethod
     def register(**kwargs):
         new_user = User(email=kwargs['login'],

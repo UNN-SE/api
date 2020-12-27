@@ -48,4 +48,7 @@ class UserController(MethodView):
     @auth.login_required
     def get(user_id):
         """Получить инфу о юзере"""
-        return jsonify(User.mock(user_id))
+        if auth.current_user().type != UserType.client or auth.current_user().id == user_id:
+            return jsonify(user_repository.info(user_id))
+        else:
+            return make_response(jsonify({}), 403)
