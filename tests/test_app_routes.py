@@ -17,7 +17,7 @@ def test_server_connect(client):
 
 def test_server_signup(client):
     response = client.post('/api/users',
-                           data="",
+                           data=jsonify({"login": "username", "password": "password", "phone": "phone"}).get_json(),
                            follow_redirects=True)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/json"
@@ -29,6 +29,4 @@ def test_server_signin(client):
                            follow_redirects=True)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/json"
-    response = client.get('/api/users/logout',
-                          headers={'Authorization': f'Bearer {response.json["token"]}'})
-    assert response.status_code == 200
+    assert response.json["token"] is not None
