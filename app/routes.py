@@ -34,9 +34,9 @@ def setup_orders():
 def setup_stores():
     from .store_controller import StoresController, StoreController
     stores_view = StoresController.as_view('stores_api')
-    app.add_url_rule('/api/stores/', view_func=stores_view, methods=['GET', 'POST'])
+    app.add_url_rule('/api/stores/', view_func=stores_view, methods=['GET'])
     store_view = StoreController.as_view('store_api')
-    app.add_url_rule('/api/stores/<int:store_id>', view_func=store_view, methods=['GET', 'PUT'])
+    app.add_url_rule('/api/stores/<int:store_id>', view_func=store_view, methods=['GET'])
     stat_view = StoreController.stat
     app.add_url_rule('/api/stores/<int:store_id>/stat', view_func=stat_view, defaults={'params': None}, methods=['GET'])
 

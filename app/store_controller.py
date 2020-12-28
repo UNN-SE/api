@@ -2,7 +2,7 @@ from flask import jsonify, request, make_response
 from flask.views import MethodView
 
 from .models import Photostore
-from app import auth
+from app import auth, photostore_repository
 
 
 class StoresController(MethodView):
@@ -10,13 +10,7 @@ class StoresController(MethodView):
     @auth.login_required
     def get():
         """Получить инфу о всех фотосалонах"""
-        return jsonify(orders=[Photostore.mock(), ])
-
-    @staticmethod
-    @auth.login_required
-    def post():
-        """Создание фотосалона"""
-        return make_response(jsonify({"id": 1, "msg": "order is created"}), 200)
+        return jsonify(stores=photostore_repository.get_all())
 
 
 class StoreController(MethodView):
@@ -24,13 +18,11 @@ class StoreController(MethodView):
     @auth.login_required
     def get(store_id):
         """Инфо о конкретном фотосалоне"""
-        return jsonify(Photostore.mock(store_id))
-
-    @staticmethod
-    @auth.login_required
-    def put(store_id):
-        """Правка фотосалона"""
-        return make_response(jsonify({"id": store_id, "msg": "store is changed"}), 200)
+        info = photostore_repository.info(store_id)
+        if info:
+            return jsonify(info)
+        else:
+            return make_response(jsonify({}), 404)
 
     @staticmethod
     @auth.login_required
