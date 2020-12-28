@@ -26,7 +26,7 @@ WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
 
-ENV NO_DB=false
+ENV NO_DB=false FLASK_ENV=production
 
 CMD flask run --host=0.0.0.0
 
