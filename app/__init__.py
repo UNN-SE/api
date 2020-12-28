@@ -32,7 +32,7 @@ def create_app():
     global db
     db = SQLAlchemy(loc_app)
 
-    from .logic.order_repository import OrderRepositoryFolder
+    from .logic.order_repository import OrderRepositoryFolder, OrderRepositoryDB
     from .logic.user_repository import UserRepositoryMock, UserRepositoryDB
     global order_repository
     global user_repository
@@ -40,7 +40,7 @@ def create_app():
         order_repository = OrderRepositoryFolder()
         user_repository = UserRepositoryMock()
     else:
-        order_repository = OrderRepositoryFolder()  # TODO mock, remove it
+        order_repository = OrderRepositoryDB()
         user_repository = UserRepositoryDB()
     from app import routes, models
 
