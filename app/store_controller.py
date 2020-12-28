@@ -28,4 +28,8 @@ class StoreController(MethodView):
     @auth.login_required
     def stat(store_id, params):
         """Статистика фотосалона"""
-        return jsonify(Photostore.mock_stat(store_id))
+        info = photostore_repository.stat(store_id)
+        if info:
+            return jsonify(info)
+        else:
+            return make_response(jsonify({}), 404)
