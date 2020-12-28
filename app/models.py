@@ -93,6 +93,12 @@ class Photostore(db.Model):
     equipments = relationship("Equipment", secondary=photostoreEquipment, back_populates="photoStore")
     workers = relationship("User")
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'address': self.address
+        }
+
     @staticmethod
     def mock(salon_id=1):
         return {
