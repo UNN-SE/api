@@ -33,6 +33,7 @@ class OrdersController(MethodView):
         """Создание заказа"""
         param = request.form.to_dict()
         param['client_id'] = auth.current_user().id
+        param['services'] = request.form.getlist('services[]')
         id = order_repository.create(param)
         return make_response(jsonify({"id": id, "msg": "order is created"}), 200)
 

@@ -13,6 +13,7 @@ auth = None
 serializer = None
 order_repository = None
 user_repository = None
+service_repository=None
 
 
 def create_app():
@@ -34,14 +35,18 @@ def create_app():
 
     from .logic.order_repository import OrderRepositoryFolder, OrderRepositoryDB
     from .logic.user_repository import UserRepositoryMock, UserRepositoryDB
+    from .logic.service_repository import ServiceRepositoryMock, ServiceRepositoryDB
     global order_repository
     global user_repository
+    global service_repository
     if loc_app.config['NO_DB']:
         order_repository = OrderRepositoryFolder()
         user_repository = UserRepositoryMock()
+        service_repository = ServiceRepositoryMock()
     else:
         order_repository = OrderRepositoryDB()
         user_repository = UserRepositoryDB()
+        service_repository = ServiceRepositoryDB()
     from app import routes, models
 
     # db.create_all()

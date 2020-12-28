@@ -46,7 +46,7 @@ orderService = Table("order_service", db.Model.metadata, Column("order_id", Inte
 class Order(db.Model):
     id = Column(Integer, primary_key=True)
     client_id = Column(Integer, ForeignKey('user.id'))
-    source = Column(String(120), unique=True, nullable=False)
+    source = Column(String(120), nullable=False)
     photostore_id = Column(Integer, ForeignKey("photostore.id"))
     status = Column(Integer)
     services = relationship("Service", secondary=orderService, back_populates="orders")
@@ -68,6 +68,14 @@ class Service(db.Model):
     decription = Column(String(120), unique=True, nullable=False)
     price = Column(Integer)
     orders = relationship("Order", secondary=orderService, back_populates="services")
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.decription,
+            'price': self.price
+        }
 
     @staticmethod
     def mock(service_id=1):

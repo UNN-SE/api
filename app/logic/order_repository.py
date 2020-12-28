@@ -1,7 +1,7 @@
 import os
 
 from app import log, app, db
-from app.models import Order
+from app.models import Order, Service
 from sqlalchemy.exc import *
 
 
@@ -89,6 +89,11 @@ class OrderRepositoryDB(OrderRepository):
                           photostore_id=params['photostore_id'],
                           status=0)
 
+        services_id = params['services']
+        for i in services_id:
+            service = Service.query.filter_by(id=i).first()
+            new_order.services.append(service)
+
         db.session.add(new_order)
         db.session.commit()
         return new_order.id
@@ -98,11 +103,15 @@ class OrderRepositoryDB(OrderRepository):
         order = Order.query.filter_by(id=order_id).first()
         if order is None:
             return None
+
+        services = [s.to_dict() for s in order.services]
+
         return {
             'client': order.client_id,
             'store': order.photostore_id,
             'photo': order.source,
-            'status': order.status
+            'status': order.status,
+            'services': services
         }
 
     @staticmethod
