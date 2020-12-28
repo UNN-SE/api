@@ -55,7 +55,7 @@ def setup_equipments():
     from .equipment_controller import EquipmentsController, EquipmentItemController
     equipments_view = EquipmentsController.as_view('equipments_api')
     app.add_url_rule('/api/equipments/', methods=['GET', 'POST'],
-                     view_func=equipments_view, defaults={'store_id': None})
+                     view_func=equipments_view)
     app.add_url_rule('/api/stores/<int:store_id>/equipments/', methods=['GET'],
                      view_func=equipments_view) # TODO move it to StoreController?
     item_view = EquipmentItemController.as_view('equipment_item_api')

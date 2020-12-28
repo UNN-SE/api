@@ -120,6 +120,13 @@ class Equipment(db.Model):
     type = Column(String(120), unique=True, nullable=False)
     photoStore = relationship("Photostore", secondary=photostoreEquipment, back_populates="equipments")
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'type': self.type
+        }
+
     @staticmethod
     def mock(equipment_id=1):
         return {

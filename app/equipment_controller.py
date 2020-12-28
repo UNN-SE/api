@@ -3,24 +3,26 @@ from flask.views import MethodView
 
 
 from .models import Equipment
-from app import auth
+from app import auth, equipment_repository
 
 
 class EquipmentsController(MethodView):
     @staticmethod
     @auth.login_required
-    def get(store_id):
+    def get():
         """Запрос инфы о оборудовании"""
-        if store_id is None:
-            # Получить инфу о всех девайсах и их принадлежности фотосалонам
-            return jsonify(orders=[Equipment.mock(), ])
-        return jsonify(store_id=store_id, equipments=[Equipment.mock(), ])
+        return jsonify(equipments=equipment_repository.get_all())
 
     @staticmethod
     @auth.login_required
     def post():
-        """Добавление новгого девайса в систему"""
-        return make_response(jsonify({"id": 1, "msg": "new equipment item is created"}), 200)
+        """Добавление нового девайса в систему"""
+        data = request.form
+        try:
+            id = equipment_repository.create(data)
+            return make_response(jsonify({"equipment_id": id, "msg": "equipment successfully registered"}), 200)
+        except Exception as e:
+            return make_response(jsonify({"equipment_id": -1, "msg": str(e)}), 400)
 
 
 class EquipmentItemController(MethodView):
