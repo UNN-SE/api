@@ -44,9 +44,9 @@ def setup_stores():
 def setup_services():
     from .service_controller import ServicesController, ServiceItemController
     services_view = ServicesController.as_view('services_api')
-    app.add_url_rule('/api/services/', view_func=services_view, methods=['GET', 'POST'])
+    app.add_url_rule('/api/services/', view_func=services_view, methods=['GET'])
     item_view = ServiceItemController.as_view('service_item_api')
-    app.add_url_rule('/api/services/<int:service_id>', view_func=item_view, methods=['GET', 'PUT', 'DELETE'])
+    app.add_url_rule('/api/services/<int:service_id>', view_func=item_view, methods=['GET'])
 
 
 def setup_equipments():
