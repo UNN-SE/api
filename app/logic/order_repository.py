@@ -2,6 +2,7 @@ import os
 
 from app import log, app, db
 from app.models import Order, Service
+from flask import send_from_directory
 from sqlalchemy.exc import *
 
 
@@ -20,6 +21,10 @@ class OrderRepository:
 
     @staticmethod
     def update_status(order_id, new_status):
+        raise NotImplementedError
+
+    @staticmethod
+    def download_photo(order_id):
         raise NotImplementedError
 
     @staticmethod
@@ -77,6 +82,10 @@ class OrderRepositoryFolder(OrderRepository):
         pass
 
     @staticmethod
+    def download_photo(order_id):
+        return send_from_directory('app/static/mock', 'lena.png')
+
+    @staticmethod
     def upload_photo(order_id, chunk_index, chunks_count, chunk_offset, stream, size):
         super()._save_photo(order_id, chunk_index, chunks_count, chunk_offset, stream, size)
 
@@ -122,6 +131,14 @@ class OrderRepositoryDB(OrderRepository):
     def update_status(order_id, new_status):
         Order.query.filter_by(id=order_id).update({'status': new_status})
         db.session.commit()
+
+    @staticmethod
+    def download_photo(order_id):
+        filename = f'{str(order_id)}.jpg'  # TODO проверка типа файла
+        if os.path.exists(os.path.join(app.config['PHOTOS_DIR'], filename)):
+            return send_from_directory(app.config['PHOTOS_DIR'], filename)
+        else:
+            return None
 
     @staticmethod
     def upload_photo(order_id, chunk_index, chunks_count, chunk_offset, stream, size):

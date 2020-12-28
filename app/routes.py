@@ -29,6 +29,8 @@ def setup_orders():
     upload_photo_view = OrderItemController.upload_photo
     app.add_url_rule('/api/orders/<int:order_id>/upload', methods=['POST'],
                      view_func=upload_photo_view)
+    app.add_url_rule('/api/orders/<int:order_id>/photo', methods=['GET'],
+                     view_func=OrderItemController.download_photo)
 
 
 def setup_stores():

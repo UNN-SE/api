@@ -63,6 +63,22 @@ class OrderItemController(MethodView):
 
     @staticmethod
     @auth.login_required
+    def download_photo(order_id):
+        order = order_repository.info(order_id)
+        if order is None:
+            return make_response(jsonify({'msg': 'No such order'}), 404)
+        elif auth.current_user().id != order['client'] and auth.current_user().type == UserType.client:
+            return make_response(jsonify({"id": order_id, "msg": "forbidden"}), 403)
+        else:
+            file = order_repository.download_photo(order_id)
+            if file is None:
+                return make_response(jsonify({'msg': 'Photo not uploaded yet'}), 404)
+            else:
+                return file
+
+
+    @staticmethod
+    @auth.login_required
     def upload_photo(order_id):
         info = order_repository.info(order_id)
         if info is None:
