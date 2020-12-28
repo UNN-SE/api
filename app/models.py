@@ -46,7 +46,7 @@ orderService = Table("order_service", db.Model.metadata, Column("order_id", Inte
 class Order(db.Model):
     id = Column(Integer, primary_key=True)
     client_id = Column(Integer, ForeignKey('user.id'))
-    source = Column(String(120), unique=True, nullable=False)
+    source = Column(String(120), nullable=False)
     photostore_id = Column(Integer, ForeignKey("photostore.id"))
     status = Column(Integer)
     services = relationship("Service", secondary=orderService, back_populates="orders")
