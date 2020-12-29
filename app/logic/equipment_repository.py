@@ -16,6 +16,15 @@ class EquipmentRepository:
     def create(params):
         raise NotImplementedError
 
+    @staticmethod
+    def assign(store_id, item_id):
+        raise NotImplementedError
+
+    @staticmethod
+    def revoke(store_id, item_id):
+        raise NotImplementedError
+
+
 
 class EquipmentRepositoryMock(EquipmentRepository):
     @staticmethod
@@ -29,6 +38,14 @@ class EquipmentRepositoryMock(EquipmentRepository):
     @staticmethod
     def create(params):
         return 1
+
+    @staticmethod
+    def assign(store_id, item_id):
+        pass
+
+    @staticmethod
+    def revoke(store_id, item_id):
+        pass
 
 
 class EquipmentRepositoryDB(EquipmentRepository):
@@ -56,3 +73,17 @@ class EquipmentRepositoryDB(EquipmentRepository):
         db.session.add(new_eq)
         db.session.commit()
         return new_eq.id
+
+    @staticmethod
+    def assign(store_id, item_id):
+        store = Photostore.query.filter_by(id=store_id).first()
+        item = Equipment.query.filter_by(id=item_id).first()
+        store.equipments.append(item)
+        db.session.commit()
+
+    @staticmethod
+    def revoke(store_id, item_id):
+        store = Photostore.query.filter_by(id=store_id).first()
+        item = Equipment.query.filter_by(id=item_id).first()
+        store.equipments.remove(item)
+        db.session.commit()

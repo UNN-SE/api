@@ -43,21 +43,13 @@ class EquipmentsController(MethodView):
 class EquipmentItemController(MethodView):
     @staticmethod
     @auth.login_required
-    def get(store_id, entity_id):
-        """Инфо о конкретном оборудовании в конкретном салоне (уровень запраки принтера или типа того)"""
-        if auth.current_user().type != UserType.manager:
-            return make_response(jsonify(msg='restricted'), 403)
-
-        return jsonify(store_id=store_id, **Equipment.mock(entity_id))
-
-    @staticmethod
-    @auth.login_required
     def post(store_id, entity_id):
         """Присвоить оборудование с заданным id фотосалону"""
         if auth.current_user().type != UserType.manager:
             return make_response(jsonify(msg='restricted'), 403)
 
-        return make_response(jsonify({"store_id": store_id, "id": entity_id, "msg": "equipment is changed"}), 200)
+        equipment_repository.assign(store_id, entity_id)
+        return make_response(jsonify({"store_id": store_id, "id": entity_id, "msg": "equipment is assigned to store"}), 200)
 
     @staticmethod
     @auth.login_required
@@ -65,5 +57,6 @@ class EquipmentItemController(MethodView):
         """Забрать оборудование у фотосалона"""
         if auth.current_user().type != UserType.manager:
             return make_response(jsonify(msg='restricted'), 403)
-        
-        return make_response(jsonify({"store_id": store_id, "id": entity_id, "msg": "equipment is removed"}), 200)
+
+        equipment_repository.revoke(store_id, entity_id)
+        return make_response(jsonify({"store_id": store_id, "id": entity_id, "msg": "equipment is removed from store"}), 200)
