@@ -126,6 +126,7 @@ class OrderRepositoryDB(OrderRepository):
             'store': order.photostore_id,
             'photo': order.source,
             'status': order.status,
+            'id': order.id,
             'services': services
         }
 

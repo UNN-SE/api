@@ -58,6 +58,7 @@ class Order(db.Model):
             'store': self.photostore_id,
             'photo': self.source,
             'status': self.status,
+            'id': self.id,
             'services': services
         }
 
