@@ -60,7 +60,7 @@ class UserRepositoryDB(UserRepository):
     @staticmethod
     def info(user_id):
         user = User.query.filter_by(id=user_id).first()
-        return {"id": user.id, "email": user.email, "phone": user.phone, "type": user.type}
+        return {"id": user.id, "email": user.email, "phone": user.phone, "type": user.type.value}
 
     @staticmethod
     def register(**kwargs):
