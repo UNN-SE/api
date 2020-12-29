@@ -125,7 +125,7 @@ class OrderRepositoryDB(OrderRepository):
 
     @staticmethod
     def filter(criteria):
-        return Order.query.filter_by(**criteria).all()
+        return [o.to_dict() for o in Order.query.filter_by(**criteria).all()]
 
     @staticmethod
     def update_status(order_id, new_status):

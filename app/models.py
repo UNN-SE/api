@@ -51,6 +51,17 @@ class Order(db.Model):
     status = Column(Integer)
     services = relationship("Service", secondary=orderService, back_populates="orders")
 
+    def to_dict(self):
+        services = [s.to_dict() for s in self.services]
+
+        return {
+            'client': self.client_id,
+            'store': self.photostore_id,
+            'photo': self.source,
+            'status': self.status,
+            'services': services
+        }
+
     @staticmethod
     def mock(order_id=1):
         return {
