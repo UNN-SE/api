@@ -57,9 +57,9 @@ def setup_equipments():
     app.add_url_rule('/api/equipments/', methods=['GET', 'POST'],
                      view_func=equipments_view)
     app.add_url_rule('/api/stores/<int:store_id>/equipments/', methods=['GET'],
-                     view_func=equipments_view) # TODO move it to StoreController?
+                     view_func=equipments_view)
     item_view = EquipmentItemController.as_view('equipment_item_api')
-    app.add_url_rule('/api/stores/<int:store_id>/equipments/<int:entity_id>', methods=['GET', 'POST', 'DELETE'],
+    app.add_url_rule('/api/stores/<int:store_id>/equipments/<int:entity_id>', methods=['POST', 'DELETE'],
                      view_func=item_view)
 
 

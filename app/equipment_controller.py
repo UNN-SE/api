@@ -18,6 +18,15 @@ class EquipmentsController(MethodView):
 
     @staticmethod
     @auth.login_required
+    def get(store_id):
+        """Запрос инфы о оборудовании"""
+        if auth.current_user().type != UserType.manager:
+            return make_response(jsonify(msg='restricted'), 403)
+
+        return jsonify(equipments=equipment_repository.get_of_store(store_id))
+
+    @staticmethod
+    @auth.login_required
     def post():
         """Добавление нового девайса в систему"""
         if auth.current_user().type != UserType.manager:

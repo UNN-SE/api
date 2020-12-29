@@ -1,11 +1,15 @@
 from app import log, app, db
-from app.models import Equipment
+from app.models import Equipment, Photostore
 from sqlalchemy.exc import *
 
 
 class EquipmentRepository:
     @staticmethod
     def get_all():
+        raise NotImplementedError
+
+    @staticmethod
+    def get_of_store(store_id):
         raise NotImplementedError
 
     @staticmethod
@@ -17,6 +21,10 @@ class EquipmentRepositoryMock(EquipmentRepository):
     @staticmethod
     def get_all():
         return [Equipment.mock(), ]
+
+    @staticmethod
+    def get_of_store(store_id):
+        raise Equipment.mock()
 
     @staticmethod
     def create(params):
@@ -35,6 +43,10 @@ class EquipmentRepositoryDB(EquipmentRepository):
             e['store'] = [s.to_dict() for s in d.photoStore]
             ret.append(e)
         return ret
+
+    @staticmethod
+    def get_of_store(store_id):
+        return [e.to_dict for e in Photostore.query.filter_by(id=store_id).first().equipments]
 
     @staticmethod
     def create(params):
