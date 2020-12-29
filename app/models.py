@@ -26,7 +26,6 @@ class User(db.Model):
             "role": "client",
             "email": "test@test.com",
             "phone": 891012345676,
-            # TODO вписать поля, нужные фронтенду
         }
 
 
@@ -78,6 +77,7 @@ class Service(db.Model):
     title = Column(String(120), unique=True, nullable=False)
     decription = Column(String(120), unique=True, nullable=False)
     price = Column(Integer)
+    filter_name = Column(String(120), unique=True)
     orders = relationship("Order", secondary=orderService, back_populates="services")
 
     def to_dict(self):
@@ -85,7 +85,8 @@ class Service(db.Model):
             'id': self.id,
             'title': self.title,
             'description': self.decription,
-            'price': self.price
+            'price': self.price,
+            'is_filter': self.filter_name is not None
         }
 
     @staticmethod

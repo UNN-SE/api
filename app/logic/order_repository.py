@@ -3,6 +3,7 @@ import os
 from app import log, app, db
 from app.models import Order, Service
 from flask import send_from_directory
+from .image_filters import apply_to_image
 from sqlalchemy.exc import *
 
 
@@ -103,6 +104,11 @@ class OrderRepositoryDB(OrderRepository):
             service = Service.query.filter_by(id=i).first()
             new_order.services.append(service)
 
+        filters_id = params['filters']
+        for i in filters_id:
+            filter = Service.query.filter(Service.filter_name.isnot(None)).filter_by(id=i).first()
+            new_order.services.append(filter)
+
         db.session.add(new_order)
         db.session.commit()
         return new_order.id
@@ -144,5 +150,9 @@ class OrderRepositoryDB(OrderRepository):
     def upload_photo(order_id, chunk_index, chunks_count, chunk_offset, stream, size):
         path = super(OrderRepositoryDB,OrderRepositoryDB)._save_photo(order_id, chunk_index, chunks_count, chunk_offset, stream, size)
         if path:
+            services = Order.query.filter_by(id=order_id).first().services
+            for f in services:
+                if f.filter_name:
+                    apply_to_image(path, f.filter_name)
             Order.query.filter_by(id=order_id).update({'source': path})
             db.session.commit()

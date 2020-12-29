@@ -34,6 +34,7 @@ class OrdersController(MethodView):
         param = request.form.to_dict()
         param['client_id'] = auth.current_user().id
         param['services'] = request.form.getlist('services[]')
+        param['filters'] = request.form.getlist('filters[]')
         id = order_repository.create(param)
         return make_response(jsonify({"id": id, "msg": "order is created"}), 200)
 
